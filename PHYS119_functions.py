@@ -73,7 +73,7 @@ def calc_standard_error(x):
 
 #Calculates the u[x_ave] given:
 #x: a numpy array of scalars
-def calc_u_x_ave(x)
+def calc_u_x_ave(x):
     sd = np.std(x)
     root_N = len(x)**0.5
     
