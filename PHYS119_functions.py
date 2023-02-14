@@ -14,6 +14,7 @@ g = 9.809 #Acceleration due to gravity
 #   \___/|_| |_|\___\___|_|   \__\__,_|_|_| |_|\__|\__, |
 #                                                  |___/                                                                                                                                                               
 
+#Lower t -> more similar results 
 #Calculates the t' value given:
 #A: Measurement 1
 #B: Measurment 2
@@ -36,6 +37,39 @@ def calc_uncertainty_propagation_linear(a,b,uX,uY):
 #R: Result of calculation
 def calc_uncertainty_propagation_nonlinear(a,b,uX,uY,X,Y,R):
     return (R * np.sqrt((a * uX/X)**2 + (b * uY/Y) ** 2))
+
+def calc_weightedMean(x,u_x):
+    w = 1 / (u_x)**2
+    x_bar = np.sum(x * w) / np.sum(w)
+
+    return x_bar
+
+#Calculates sd of a list x given:
+#x: a numpy array of scalars(numbers)
+def calc_sd(x):
+    mean = np.mean(x)
+    print("Mean = ", mean)
+
+    #calculates x_i - x_ave
+    x = x - mean
+
+    #Calcs the denominator to 1 degree of freedom
+    denominator = 1 / (len(x) - 1)
+
+    #Calcualtes the sd
+    sd = (denominator * np.sum(x**2))**0.5
+    print("SD = ", sd)
+    return sd
+
+#Calculates the standard error(u[SD]) of x given:
+#x: a numpy array of scalars
+def calc_standard_error(x):
+    sd = ((1/(len(x)-1)) * np.sum((x-np.mean(x))**2))**0.5 # Condensed calc of sd. Refer to calc_sd
+    print("SD = ", sd)
+
+    u_sd = sd / (len(x) ** 0.5)
+    print("Standard Error = ", u_sd)
+    return u_sd
 
 
 #   ____             _                 
@@ -99,7 +133,7 @@ def calc_a_diameter(p, lambdaVal, L, y):
 
     a = p * lambdaVal * (1 + z**2) ** 0.5
     print("a = ", a)
-    return 
+    return a
 
 #Calculates u[a] given:
 #a: Diameter of hair
