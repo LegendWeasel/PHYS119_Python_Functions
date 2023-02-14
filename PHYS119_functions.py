@@ -54,10 +54,10 @@ def calc_sd(x):
     x = x - mean
 
     #Calcs the denominator to 1 degree of freedom
-    denominator = 1 / (len(x) - 1)
+    NMinusOneInverse = 1 / (len(x) - 1)
 
     #Calcualtes the sd
-    sd = (denominator * np.sum(x**2))**0.5
+    sd = (NMinusOneInverse * np.sum(x**2))**0.5
     print("SD = ", sd)
     return sd
 
@@ -70,6 +70,17 @@ def calc_standard_error(x):
     u_sd = sd / (len(x) ** 0.5)
     print("Standard Error = ", u_sd)
     return u_sd
+
+#Calculates the u[x_ave] given:
+#x: a numpy array of scalars
+def calc_u_x_ave(x)
+    sd = np.std(x)
+    root_N = len(x)**0.5
+    
+    u_x_ave = sd / root_N
+    print("u[x_ave] = ", u_x_ave)
+
+    return u_x_ave
 
 
 #   ____             _                 
