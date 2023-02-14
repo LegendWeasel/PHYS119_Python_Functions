@@ -163,4 +163,33 @@ def calc_u_a(p,L, y, u_L, u_y, lambdaVal):
     print("u[a] = ",u_a)
 
     return u_a
-                                                 
+
+
+## Pendulum
+
+def calc_basic_analysis(tVec, MVec):
+    print("tVec = ", tVec)
+    TVec = tVec/MVec
+    print("TVec = ", TVec)
+
+    tave = np.mean(tVec)
+    Tave = np.mean(TVec)
+    print("tave = ", tave)
+    print("Tave = ", Tave)
+
+    ut = np.std(tVec, ddof = 1)
+    uT = np.std(TVec, ddof = 1)
+    print("ut = ", ut)
+    print("uT = ", uT)
+
+    utave = ut/(len(tVec)**0.5)
+    uTave = uT/(len(tVec)**0.5)
+    print("utave = ", utave)
+    print("uTave = ", uTave)
+
+    relutave = utave/tave
+    reluTave = uTave/Tave
+    print("relutave = ", relutave)
+    print("reluTave = ", reluTave)
+
+    return
