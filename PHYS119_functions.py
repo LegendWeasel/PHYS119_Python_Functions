@@ -25,6 +25,13 @@ def calc_t_prime(A, B, uA, uB):
     print("t' = ", t_prime)
     return t_prime
 
+#Lower t -> more similar results 
+#Calculates the t' value using standard deviation given:
+def calc_t_prime(A, B):
+    t_prime = np.abs(A-B)/(np.sqrt(np.std(A, ddof = 1)**2 + np.std(B, ddof = 1)**2))
+    print("t' = ", t_prime)
+    return t_prime
+
 #Calculates the uncertainty of R(results) assuming R = aX +bY +c given:
 #a,b,c: Constants, values with no uncertainty
 #uX,uY: u[X],u[Y] respectivly, uncertainty of X and Y
