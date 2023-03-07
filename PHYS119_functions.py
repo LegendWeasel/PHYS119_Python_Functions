@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 #Please make sure all of your inputed data is in SI units (m,kg,s, etc)
 #All inputs are assumed to be scalars(a number) unless explicitly stated otherwise
@@ -89,6 +90,62 @@ def calc_u_x_ave(x):
 
     return u_x_ave
 
+#    ____                 _     _                ___     ____           _     _             _     
+#   / ___|_ __ __ _ _ __ | |__ (_)_ __   __ _   ( _ )   |  _ \ ___  ___(_) __| |_   _  __ _| |___ 
+#  | |  _| '__/ _` | '_ \| '_ \| | '_ \ / _` |  / _ \/\ | |_) / _ \/ __| |/ _` | | | |/ _` | / __|
+#  | |_| | | | (_| | |_) | | | | | | | | (_| | | (_>  < |  _ <  __/\__ \ | (_| | |_| | (_| | \__ \
+#   \____|_|  \__,_| .__/|_| |_|_|_| |_|\__, |  \___/\/ |_| \_\___||___/_|\__,_|\__,_|\__,_|_|___/
+#                  |_|                  |___/                                                     
+
+# Graphs a scatter and residual graph. DO NOT use as function, use as skeleton to copy
+# Replace xVec,uxVec,yVec, uyVec with appropriate values or assign xVec etc with correct values
+# Replace labels with appropriate label text
+def residual_graph(xVec,uxVec,yVec, uyVec):
+
+    # Scatter step 1: find the limits of the data:
+    xmin = np.min(xVec) # use the np.min function to find the smallest x value
+    xmax = np.max(xVec) # same for max
+    #print (xmin, xmax)  # uncomment to see what the limits are
+
+    # Scatter step 2: generate a bunch of x points between xmin and xmax
+    xpoints = np.linspace(xmin, xmax, 200) # gives 200 evenly spaced points between xmin and xmax
+    #print(xpoints) # uncomment to see the x values that were generated.
+
+    # Step 3: calculate the model values:
+    #################################### MODIFY THIS PART ###########################################
+    slope = 1 # Estimate of the slope.
+    intercept = 1.1  # Estimate of the intercept
+    ypoints = xpoints * slope + intercept # this calculates the yvalues at all 200 points.
+    #################################################################################################
+
+    # Scatter step 4: plot the curve. We plot this as a red line "r-" :
+    plt.plot(xpoints, ypoints, "r-", label = "F = kx")
+
+    # Scatter step 5: plot the data:
+    plt.errorbar(xVec, yVec, uyVec, fmt="bo", markersize = 3, label="Experimental data")
+    plt.title("x vs. y for given situation")
+    plt.xlabel("Label for x (Unit)")
+    plt.ylabel("Label for y (Unit)")
+    plt.legend()
+    plt.show()
+
+    # Residuals step 1: Calculate the model at each x-datapoint
+    ymodel = slope * xVec # y = mx at each x_i
+
+    # Residuals step 2: Calcualte the residual vector
+    RVec = yVec - ymodel
+
+    # Resoduals step 3: Plot the residual vector against the x-data vector
+    plt.errorbar(xVec, RVec, uyVec, fmt="bo", markersize = 3)
+
+    # Residuals step 4: Add a R = 0 x-axis (horizontal line) to the plot
+    plt.hlines(y=0, xmin=xmin, xmax=xmax, color='k') # draw axis at y = 0.
+
+    # Residuals step 5: Add axis labels and title, and show the graph
+    plt.title("Residuals for y vs. x for given situation")
+    plt.xlabel("Label for x residual")
+    plt.ylabel("Residual = data - model (Unit)")
+    plt.show()
 
 #   ____             _                 
 #  / ___| _ __  _ __(_)_ __   __ _ ___ 
