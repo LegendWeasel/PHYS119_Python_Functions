@@ -147,6 +147,15 @@ def residual_graph(xVec,uxVec,yVec, uyVec):
     plt.ylabel("Residual = data - model (Unit)")
     plt.show()
 
+#Calculates the chi2 values of a set a data and model given:
+#y: y values
+#fx: the model y values after giving it the x, ie f(x)
+#P = perameter/degree of freedom. ie slope and y-int -> P=2
+def calc_chi2(y, fx,uy, P):
+    chi2 = 1/((len(y) - P)) * np.sum(((y-fx)/uy)**2)
+    print("chi2 = ", chi2)
+    return chi2
+
 #   ____             _                 
 #  / ___| _ __  _ __(_)_ __   __ _ ___ 
 #  \___ \| '_ \| '__| | '_ \ / _` / __|
