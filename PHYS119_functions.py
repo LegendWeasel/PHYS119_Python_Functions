@@ -146,6 +146,98 @@ def residual_graph(xVec,uxVec,yVec, uyVec):
     plt.xlabel("Label for x residual")
     plt.ylabel("Residual = data - model (Unit)")
     plt.show()
+    
+    
+ def linearizing_exponential_graph(x, ux, N, t, ut):
+    #Calc u[N] vector
+    uNVec = np.sqrt(NVec)
+    RateVec = NVec/tVec #R = N/t vector
+    uRateVec = RateVec * np.sqrt(1/NVec + (utVec/tVec)**2) #u[R] vector
+    logRateVec = np.log(RateVec) #Natural log of count rate
+    ulogRateVec = uRateVec/RateVec #Uncertainty of log count rate
+    
+    # correcty calculate m, u[m], b and u[b]
+    yVec = logRateVec
+    uyVec = ulogRateVec
+
+    A = np.sum(1/uyVec**2)
+    B = np.sum(xVec*yVec/uyVec**2)
+    C = np.sum(xVec/uyVec**2)
+    D = np.sum(yVec/uyVec**2)
+    E = np.sum(xVec**2/uyVec**2)
+    Z = A * E - C**2
+
+    m  = (A * B - C * D)/Z
+    um = np.sqrt(A/Z)
+    b  = (D * E - B * C)/Z
+    ub = np.sqrt(E/Z)
+    
+    # DATA/MODEL PLOT
+    # Step 1: find the limits of the data:
+    xmin = np.min(xVec) # use the np.min function to find the smallest x value
+    xmax = np.max(xVec) # same for max
+    #print (xmin, xmax)  # uncomment to see what the limits are
+
+    # Step 2: generate a bunch of x points between xmin and xmax
+    xpoints = np.linspace(xmin, xmax, 200) # gives 200 evenly spaced points between xmin and xmax
+    #print(xpoints) # uncomment to see the x values that were generated.
+
+    # Step 3: calculate the model values (for linear model with intercept):
+    #################### MODIFY THE MODEL PARAMETERS #########################
+    slope = m  # best fit slope
+    intercept = b  # best fit intercept
+    ##########################################################################
+    ypoints = xpoints * slope + intercept # this calculates the yvalues at all 200 points
+
+    # Step 4: plot the curve. We plot this as a red line "r-" :
+    plt.plot(xpoints, ypoints, "r-", label = "log(R) = -mu x + log(R_0)")
+
+    # What's below is exactly what we had earlier:
+    plt.errorbar(xVec, logRateVec, ulogRateVec, fmt="bo", markersize=3, label="Log of Experimental data")
+    plt.title("Semi-log plot for Count rate vs. thickness of shielding")
+    plt.xlabel("Thickness (mm)")
+    plt.ylabel("Log(Count-rate)")
+    plt.legend()
+    plt.show()
+
+
+    # RESIDUALS PLOT
+    # Step 1: Calculate the model at each x-datapoint
+    ymodel = xVec * slope + intercept
+
+    # Step 2: Calculate the residual vector
+    resVec = logRateVec - ymodel
+
+    # Step 3: Plot the residual vector against the x-data vector
+    plt.errorbar(xVec, resVec, ulogRateVec, fmt="bo", markersize = 3)
+
+    # Step 4: Add a R = 0 x-axis (horizontal line) to the plot
+    plt.hlines(y=0, xmin=xmin, xmax=xmax, color='k') # draw axis at y = 0.
+
+    # Add axis labels and title, and show the graph
+    plt.title("Residuals for Linear fit of semi-log count rate data")
+    plt.xlabel("Thickness (mm)")
+    plt.ylabel("Residual = data - model")
+    plt.show()
+
+    # CHI-SQUARED CALCULATION
+    N = len(xVec)
+    P = 2  # 2 parameters; slope and intercept
+    weightedsquaredresVec = (resVec/ulogRateVec)**2
+    chisquared = np.sum(weightedsquaredresVec)/(N-P)
+    
+    mu = -m
+    R0 = np.exp(b)
+    umu = um
+    uR0 = ub * np.exp(b)
+    
+    #Results
+    print("Chi-squared", chisquared)
+    print("Slope =", m, "±",um)
+    print("Intervept =", b, "±",ub)
+    print("mu = ", mu, "±", umu)
+    print("R0 = ", R0, "±", uR0)
+    
 
 #Calculates the chi2 values of a set a data and model given:
 #y: y values
